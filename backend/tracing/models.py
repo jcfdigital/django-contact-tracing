@@ -121,7 +121,7 @@ class EstablishmentProfileModel(models.Model):
     mobile1_confirmed = models.BooleanField('Confirmed', default=False)
     mobile2 = models.CharField('Alternative Mobile No.', max_length=11, null=True, blank=True)
     mobile2_confirmed = models.BooleanField('Confirmed', default=False)
-    landline = models.CharField('Landline No.', max_length=11)
+    landline = models.CharField('Landline No.', max_length=11, null=True, blank=True)
     landline_confirmed = models.BooleanField('Confirmed', default=False)
 
     time_created = models.DateTimeField('Time Created', auto_now_add=True)
@@ -142,7 +142,7 @@ class TracingModel(models.Model):
     ]
 
     user_profile = models.ForeignKey(UserProfileModel, on_delete=models.RESTRICT, verbose_name="Person")
-    establishment_profile = models.ForeignKey(UserProfileModel, on_delete=models.RESTRICT, verbose_name="Establishment")
+    establishment_profile = models.ForeignKey(EstablishmentProfileModel, on_delete=models.RESTRICT, verbose_name="Establishment")
     transact = models.CharField('Transaction', max_length=2, choices=TRANSACT_CHOICES)
     transact_time = models.DateTimeField('Transaction Time', auto_now=True)
 
@@ -151,4 +151,4 @@ class TracingModel(models.Model):
         verbose_name_plural = 'Traces'
 
     def __str__(self):
-        return self.transact + ' of ' + self.user_profile + ' at ' + self.establishment_profile
+        return self.transact + ' of ' + self.user_profile.qr_code_text + ' at ' + self.establishment_profile.establishment_name

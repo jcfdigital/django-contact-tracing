@@ -50,7 +50,7 @@ class UserProfileModelAdmin(admin.ModelAdmin):
 class EstablishmentProfileModelAdmin(admin.ModelAdmin):
     
     list_display = (
-        '__str__',
+        'establishment_name',
         'email',
         'time_created',
         'time_updated',
@@ -61,9 +61,42 @@ class EstablishmentProfileModelAdmin(admin.ModelAdmin):
         'time_updated',
     )
 
-    
+    search_fields = ( 
+        'email',
+        'establishment_name'
+    )
 
+    ordering = ('establishment_name', )
+
+    fieldsets = (
+        (None, {'fields': ('establishment_name', )}),
+        ('Contact Info', {'fields': ('email', ('mobile1', 'mobile1_confirmed') , ('mobile2', 'mobile2_confirmed'), ('landline', 'landline_confirmed'),)}),
+        ('Address', {'fields': (('street','town','city', 'region',),)}),
+        ('Others', {'fields': ('time_created','time_updated',)}),
+    )
 @admin.register(models.TracingModel)
 class TracingModelAdmin(admin.ModelAdmin):
-    pass
 
+    list_display = (
+        'user_profile',
+        'establishment_profile',
+        'transact',
+        'transact_time',
+    )
+
+    readonly_fields = (
+        'transact_time',
+    )
+
+    # search_fields = ( 
+    #     'user_profile__lname',
+    #     'user_profile__fname',
+    #     'user_profile__email',
+    #     'establishment_profile__establishment_name',
+    # )
+    
+    ordering = ('id', )
+
+    fieldsets = (
+        (None, {'fields': ('user_profile', 'establishment_profile', 'transact', 'transact_time')}), 
+    )
